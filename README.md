@@ -14,8 +14,10 @@ titlepage-background: "background1.pdf"
 ## II. Physical Security Assessment
 
 ## III. IT Security and Risk Assessment
-
+#### 3.1. Assessment methodology
 To further test your IT security, we have opted to conduct a gray box test on your internal systems. A gray box pentest is when a pentest is given limited intelligence or access in the target system (Shebli & Beheshti, 2018). This is to simulate an "assume breached" scenerio in the event that hackers managed to compromise a single endpoint system by the usage of C2s (Command and Control) or by the usage of RDP like the case of lapsus$, where they used compromised credentials from insiders or a social engineering job to wreck havoc on NVIDIA, Okta, etc (CISA, 2023). 
+
+#### 3.2. Initial Access
 
 With your permission, we were given an unmarked windows machine (WS01) to start with: 
 
@@ -29,6 +31,8 @@ The first thing we would do is to install a pivoting tool in order to access the
 After we got reverse-ssh running on the system, we can now ssh in ```ssh -D 9050 -p 31337 10.131.9.240```. The proxy is now running at 127.0.0.1:9050 on the attacker machine, which is proxychains's default option.
 
 ![proxychains in action](images/nmap_reverseproxy.webp)
+
+#### 3.3. Internal network enumeration
 
 After a while of running nmap with the `-st` and `-Pn` to disable host discovery, we discovered there server hosts: 
 
@@ -105,16 +109,43 @@ After taking a closer look at the users, we spotted user ```samwell.tarly``` wit
 
 ![](images/user_description.png)
 
+#### 3.4. Domain lateral movement
+
 Running the account through netexec showed that `samwell` can Remote Desktop into SRV02. 
 
 ![Initial access on SRV02](images/srv02-rdp.png)
 
-Next, we used SharpHound to collect all information of the Domain with the authenticated account:
+Next, we used SharpHound to collect all information of the dev.digitech.com Domain with the authenticated account:
 
 ![](images/sharphound.png)
 
 Then, we parsed the file through BloodHound to turn the data into graphs so that we can determine the "relationship" the objects (users, groups, etc) have with each other in the domain. 
 
+![Bloodhound showing the relationship between dev.digitech.com and digitech.com](images/bloodhound.png)
+
+When we inspected the current user, we found out that they have full control over the "DefaultWallpaper" a Group Policy Object. 
+
+![](images/bloodhound_gpo.png)
+
+In Windows, a Group Policy Object is a set of rules for user, groups and computers. These rules can range from default wallpaper, startup programs, what rights an user have locally on that computer, can they be local admin on, etc (Microsoft Learn). 
+
+![](images/bloodhound_gpo2.png)
+
+In this case, the ```DefaultWallpaper``` group policy object dictates the default wallpaper on DC02 and SRV02. With control of this group policy, we can hijack it to grant the current user local Administrator rights on DC02 and SRV02 with the usage of SharpGPOAbuse on SRV02 as samwell.tarly: 
+
+![](images/sharpgpoabuse.png)
+
+After the GPO was updated, we waited 90 minutes and we can now login as the local Administrator for SRV02 and DC02:
+
+![samwell.tarly as local Admin on SRV02](images/srv02-admin.png)
+
+![samwell.tarly as local Admin on DC02](images/dc02-admin.png)
+
+With local admin right on DC02, we can now dump all of the known domain NTLM credentials using the secretsdump script from the impacket packages: 
+
+![](images/secretsdump.png)
+
+With the dev.digitech.com domain compromised, we are going after the main digitech.com domain which contains even more sensitive accounts and services. 
 
 
 ## IV. Assets and Security Controls Assurance Review
@@ -128,4 +159,6 @@ Shebli, H.M. and Beheshti, B.D. (2018) ‘A study on penetration testing process
 Review of the attacks associated with lapsus$ and related threat groups executive summary: CISA (2023) Cybersecurity and Infrastructure Security Agency CISA. Available at: https://www.cisa.gov/resources-tools/resources/review-attacks-associated-lapsus-and-related-threat-groups-executive-summary. 
 
 Jonathan, J. (2021) RPC for Detection Engineers. Available at: https://specterops.io/wp-content/uploads/sites/3/2022/06/RPC_for_Detection_Engineers.pdf (Accessed: 12 April 2025). 
+
+Group policy API (no date) Microsoft Learn. Available at: https://learn.microsoft.com/en-us/previous-versions/windows/desktop/policy/group-policy-start-page (Accessed: 13 April 2025). 
 
