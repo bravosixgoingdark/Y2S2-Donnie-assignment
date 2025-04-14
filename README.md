@@ -21,16 +21,16 @@ To further test your IT security, we have opted to conduct a gray box test on yo
 
 With your permission, we were given an unmarked windows machine (WS01) to start with: 
 
-![WS01 initial access user](images/ws01-inital.webp)
+![*Figure 3.2.1: WS01 initial access user*](images/ws01-inital.webp)
 
 The first thing we would do is to install a pivoting tool in order to access the internal network in the 192.168.56.0/24 subnet, we gonna use reverse-ssh by Fahrj (https://github.com/Fahrj/reverse-ssh) to act as a reverse ssh server within the network and as a pivoting proxy for proxychains. Proxychains is the tool we use to allow Linux tools to work with SOCKS proxy.
 
 
-![Reverse-SSH in action](images/reverse-ssh.webp)
+![*Figure 3.2.2: Reverse-SSH in action*](images/reverse-ssh.webp)
 
 After we got reverse-ssh running on the system, we can now ssh in ```ssh -D 9050 -p 31337 10.131.9.240```. The proxy is now running at 127.0.0.1:9050 on the attacker machine, which is proxychains's default option.
 
-![proxychains in action](images/nmap_reverseproxy.webp)
+![*Figure 3.2.3: proxychains allowing the attacker to interact with the proxy*](images/nmap_reverseproxy.webp)
 
 #### 3.3. Internal network enumeration
 
@@ -95,57 +95,69 @@ From the scan, we can determine that there is a CI/CD and file server, and 2 dom
 
 After wards we ran them through netexec to determine the hostname, roles and domain of the machine:
 
-![](images/netexec_host.webp)
+![*Figure 3.3.1: Netexec identifying the hosts and their respective domains and hostnames*](images/netexec_host.webp)
 
 From here we can draw a relationship graph for all three of the top servers: 
 
-![](images/Diagram_network.png)
+![*Figure 3.3.2: Relationship graph*](images/Diagram_network.png)
 
 Next, we looked around for any protential entry point and we found out that the dc02 domain controller allows for RPC anonymous bind. RPC is short for Remote Procedure Call, which is a protocol that would allow a client/server relationship between processes locally or over the network over "pipes" (Jonathan, 2021), one of them is MS-SAMR, which allows for remote account management. In this case, we can abuse the anonymous user (null login) with rpcclient to enumerate users and their descriptions: 
 
-![](images/rpc.png)
+![*Figure 3.3.3: RPC anonymous bind user enumeration*](images/rpc.png)
 
 After taking a closer look at the users, we spotted user ```samwell.tarly``` with their password in their description: 
 
-![](images/user_description.png)
+![*Figure 3.3.4: User with password written in their Description field*](images/user_description.png)
 
-#### 3.4. Domain lateral movement
+#### 3.4. Domain lateral movement on dev.digitech.com
 
 Running the account through netexec showed that `samwell` can Remote Desktop into SRV02. 
 
-![Initial access on SRV02](images/srv02-rdp.png)
+![*Figure 3.4.1: Initial access on SRV02*](images/srv02-rdp.png)
 
 Next, we used SharpHound to collect all information of the dev.digitech.com Domain with the authenticated account:
 
-![](images/sharphound.png)
+![*Figure 3.4.2: Sharphound collecting Domain info with an authenticated account*](images/sharphound.png)
 
 Then, we parsed the file through BloodHound to turn the data into graphs so that we can determine the "relationship" the objects (users, groups, etc) have with each other in the domain. 
 
-![Bloodhound showing the relationship between dev.digitech.com and digitech.com](images/bloodhound.png)
+![*Figure 3.4.3: Bloodhound showing the relationship between dev.digitech.com and digitech.com*](images/bloodhound.png)
 
 When we inspected the current user, we found out that they have full control over the "DefaultWallpaper" a Group Policy Object. 
 
-![](images/bloodhound_gpo.png)
+![*Figure 3.4.4: Bloodhound showing which object samwell.tarly can control on the domain*](images/bloodhound_gpo.png)
 
 In Windows, a Group Policy Object is a set of rules for user, groups and computers. These rules can range from default wallpaper, startup programs, what rights an user have locally on that computer, can they be local admin on, etc (Microsoft Learn). 
 
-![](images/bloodhound_gpo2.png)
+![*Figure 3.4.5: Bloodhound showing which computer is affected by this Group Policy Object*](images/bloodhound_gpo2.png)
 
 In this case, the ```DefaultWallpaper``` group policy object dictates the default wallpaper on DC02 and SRV02. With control of this group policy, we can hijack it to grant the current user local Administrator rights on DC02 and SRV02 with the usage of SharpGPOAbuse on SRV02 as samwell.tarly: 
 
-![](images/sharpgpoabuse.png)
+![*Figure 3.4.6: Hijacking the DEFAULTWALLPAPER Group Policy Object*](images/sharpgpoabuse.png)
 
 After the GPO was updated, we waited 90 minutes and we can now login as the local Administrator for SRV02 and DC02:
 
-![samwell.tarly as local Admin on SRV02](images/srv02-admin.png)
+![*Figure 3.4.7: samwell.tarly as local Admin on SRV02*](images/srv02-admin.png)
 
-![samwell.tarly as local Admin on DC02](images/dc02-admin.png)
+![*Figure 3.4.8: samwell.tarly as local Admin on DC02*](images/dc02-admin.png)
 
-With local admin right on DC02, we can now dump all of the known domain NTLM credentials using the secretsdump script from the impacket packages: 
+With local admin right on DC02, we can now dump all of the known domain NTLM credentials using the secretsdump script from the impacket packages that will dump domain credentials from NTDS.dit on the domain controller: 
 
-![](images/secretsdump.png)
+![*Figure 3.4.9: Dumping NTDS credentials from DC02 domain*](images/secretsdump.png)
 
-With the dev.digitech.com domain compromised, we are going after the main digitech.com domain which contains even more sensitive accounts and services. 
+While many of these NTLM hashes are uncrackable, they can be used for PtH (Pass the Hash) attacks on Windows.
+
+#### 3.5: Cross-Forest Lateral movement to digitech.com
+
+As shown in Figure 3.4.4, dev.digitech.com and digitech.com is part of the same "Forest". In Active Directory, a forest is a collection of AD domains that share the same basic schema or second level domain names (Microsoft). In order for users from either of these domains to use each other resources, both domain can trust other, unidirectionally or bidirectionally. 
+
+![*Figure 3.4.1: Diagram of how one way of trust works (Microsoft)*](images/one-way trust.gif)
+
+If domain A "trust" domain B, then domain B can access other's resources and vice versa.  
+
+![*Figure 3.4.2 PowerView showing trust direction between two domains*](images/trust.png)
+
+
 
 
 ## IV. Assets and Security Controls Assurance Review
@@ -161,4 +173,6 @@ Review of the attacks associated with lapsus$ and related threat groups executiv
 Jonathan, J. (2021) RPC for Detection Engineers. Available at: https://specterops.io/wp-content/uploads/sites/3/2022/06/RPC_for_Detection_Engineers.pdf (Accessed: 12 April 2025). 
 
 Group policy API (no date) Microsoft Learn. Available at: https://learn.microsoft.com/en-us/previous-versions/windows/desktop/policy/group-policy-start-page (Accessed: 13 April 2025). 
+
+Trust technologies: Domain and forest trusts (no date) Domain and Forest Trusts | Microsoft Learn. Available at: https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc759554(v=ws.10)?redirectedfrom=MSDN (Accessed: 14 April 2025). 
 
