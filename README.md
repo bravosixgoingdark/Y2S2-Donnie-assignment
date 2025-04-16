@@ -155,14 +155,45 @@ As shown in Figure 3.4.4, dev.digitech.com and digitech.com is part of the same 
 
 If domain A "trust" domain B, then domain B can access other's resources and vice versa.  
 
-![*Figure 3.4.2 PowerView showing trust direction between two domains*](images/trust.png)
+![*Figure 3.4.2: PowerView showing trust direction between two domains*](images/trust.png)
 
+In this case, since digitech.com and dev.digitech.com trust are bidirectional, we can attempt to break into digitech.com. As shown on figure 3.4.9, one of the account we got from dc02.dev.digitech.com was named DIGITECH$, this is the "trust" account that is neeeded for cross-domain kerberos authentication, and with it, we can forge a fraudulent ticket-granting-ticket with a SIDHistory attribute containing the SID (Security Identifier) value of digitech's.com Domain Admin.
 
+ ![*Figure 3.4.3: Getting the SID of digitech.com*](images/sid.png)
 
+With the antivirus disabled on DC02, we can use mimikatz the first generate our fraudulent TGT:
+
+ ![*Figure 3.4.4: Crafting the fake TGT*](images/mimikatz.png)
+
+With the TGT saved as trust.kirbi, we can next utilize Rubeus to request a TGS (Ticket Granting Service) with the service principal name of `cifs/dc02.digitech.com`: 
+
+![*Figure 3.4.5: Requesting a Ticket Granting Service ticket from DC02*](images/rubeus.png)
+
+With the CIFS (Common Internet File System) ticket in memory, we can try to access the C$ share on DC02: 
+
+![*Figure 3.4.6: Listing file on the C$ share*](images/smb.png)
+
+Next, to gain code execution on DC01.digitech.com, we can use PsExec, which uploads an reverse shell executable to the ADMIN$ share, then, it will start a service that will return a shell (Mitre). 
+
+![*Figure 3.4.7: Psexec on DC01*](images/psexec.png)
+ 
+![*Figure 3.4.8: Admin on DC01*](images/dom_admin.png)
+
+With admin rights on DC01, we can now use `reg save` to dump the SAM and SYSTEM hive from the registry and then exfiltrate it to extract the credentials of the local Administrator account for a NTDS.dit credential dump:
+
+![*Figure 3.4.9: SAM and SYSTEM dump from DC01*](images/sam_dump.png)
+
+![*Figure 3.4.10: Extracting DC01 Admin hash*](images/admin_hash.png)
+
+![*Figure 3.4.11: Dumping the credentials of the digitech.com domain*](images/dc01_dump.png)
+
+And we had successfully compromised both digitech.com and dev.digitech.com domain.
 
 ## IV. Assets and Security Controls Assurance Review
 
 ## V. Mitigations and Security Recommandations
+
+
 
 ## VI. References
 
@@ -176,3 +207,6 @@ Group policy API (no date) Microsoft Learn. Available at: https://learn.microsof
 
 Trust technologies: Domain and forest trusts (no date) Domain and Forest Trusts | Microsoft Learn. Available at: https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc759554(v=ws.10)?redirectedfrom=MSDN (Accessed: 14 April 2025). 
 
+Prasad, S.K. (2024) Domain trusts- A comprehensive exploitation guide. Available at: https://redfoxsec.com/blog/domain-trusts-a-comprehensive-exploitation-guide/ (Accessed: 15 April 2025). 
+
+MITRE (no date) PSEXEC, PsExec, Software S0029 | MITRE ATT&CK®. Available at: https://attack.mitre.org/software/S0029/ (Accessed: 15 April 2025). 
