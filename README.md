@@ -21,16 +21,16 @@ To further test your IT security, we have opted to conduct a gray box test on yo
 
 With your permission, we were given an unmarked windows machine (WS01) to start with: 
 
-![*Figure 3.2.1: WS01 initial access user*](images/ws01-inital.webp)
+![*Figure 3.2.1: WS01 initial access user*](images/ws01-inital.png)
 
 The first thing we would do is to install a pivoting tool in order to access the internal network in the 192.168.56.0/24 subnet, we gonna use reverse-ssh by Fahrj (https://github.com/Fahrj/reverse-ssh) to act as a reverse ssh server within the network and as a pivoting proxy for proxychains. Proxychains is the tool we use to allow Linux tools to work with SOCKS proxy.
 
 
-![*Figure 3.2.2: Reverse-SSH in action*](images/reverse-ssh.webp)
+![*Figure 3.2.2: Reverse-SSH in action*](images/reverse-ssh.png)
 
 After we got reverse-ssh running on the system, we can now ssh in ```ssh -D 9050 -p 31337 10.131.9.240```. The proxy is now running at 127.0.0.1:9050 on the attacker machine, which is proxychains's default option.
 
-![*Figure 3.2.3: proxychains allowing the attacker to interact with the proxy*](images/nmap_reverseproxy.webp)
+![*Figure 3.2.3: proxychains allowing the attacker to interact with the proxy*](images/nmap_reverseproxy.png)
 
 #### 3.3. Internal network enumeration
 
@@ -95,7 +95,7 @@ From the scan, we can determine that there is a CI/CD and file server, and 2 dom
 
 After wards we ran them through netexec to determine the hostname, roles and domain of the machine:
 
-![*Figure 3.3.1: Netexec identifying the hosts and their respective domains and hostnames*](images/netexec_host.webp)
+![*Figure 3.3.1: Netexec identifying the hosts and their respective domains and hostnames*](images/netexec_host.png)
 
 From here we can draw a relationship graph for all three of the top servers: 
 
@@ -147,7 +147,7 @@ With local admin right on DC02, we can now dump all of the known domain NTLM cre
 
 While many of these NTLM hashes are uncrackable, they can be used for PtH (Pass the Hash) attacks on Windows.
 
-#### 3.5: Cross-Forest Lateral movement to digitech.com
+#### 3.5. Cross-Forest Lateral movement to digitech.com
 
 As shown in Figure 3.4.4, dev.digitech.com and digitech.com is part of the same "Forest". In Active Directory, a forest is a collection of AD domains that share the same basic schema or second level domain names (Microsoft). In order for users from either of these domains to use each other resources, both domain can trust other, unidirectionally or bidirectionally. 
 
@@ -157,7 +157,7 @@ If domain A "trust" domain B, then domain B can access other's resources and vic
 
 ![*Figure 3.4.2: PowerView showing trust direction between two domains*](images/trust.png)
 
-In this case, since digitech.com and dev.digitech.com trust are bidirectional, we can attempt to break into digitech.com. As shown on figure 3.4.9, one of the account we got from dc02.dev.digitech.com was named DIGITECH$, this is the "trust" account that is neeeded for cross-domain kerberos authentication, and with it, we can forge a fraudulent ticket-granting-ticket with a SIDHistory attribute containing the SID (Security Identifier) value of digitech's.com Domain Admin.
+In this case, since digitech.com and dev.digitech.com trust are bidirectional, we can attempt to break into digitech.com. As shown on figure 3.4.9, one of the account we got from dc02.dev.digitech.com was named DIGITECH$, this is the "trust" account that is neeeded for cross-domain kerberos authentication, and with it, we can forge a fraudulent ticket-granting-ticket with a SIDHistory attribute containing the SID (Security Identifier) value of digitech's.com Domain Admin. SIDHistory is a feature that would retain an object's previous SID (security identifiers) when an object is migrated from another domain, attackers can abuse this attribute features to impersonate Domain Admin (Prasad, 2024)
 
  ![*Figure 3.4.3: Getting the SID of digitech.com*](images/sid.png)
 
@@ -193,6 +193,33 @@ And we had successfully compromised both digitech.com and dev.digitech.com domai
 
 ## V. Mitigations and Security Recommandations
 
+#### 5.1. Mitigations
+
+In this section, we will talk about how to mitigates the critical security vulnerbilities we found during our penetration test.
+
+- T1087: Account Discovery
+
+In this case, attacker had managed to interact with the SAMR pipe in the RPC service with a "null", or an anonymous bind. To mitigate this, administrators should enfore the "Restrict anonymous access to Named Pipes and Shares" group policy domain wide to restrict unauthenticated access to Shares and Named Pipes. (MITRE)
+
+- T1090: Proxying
+
+In this case, the attacker had managed to use a reverse proxy in the form of the reverse-ssh tool to further gain access into the internal network. To mitigate and detect these kind of attacks, administrators should employ IDS (Intrusion Detection Systems) and IPS (Intrusion Prevention Systems) to detect proxying attempts. 
+
+- T1552: Unsecured Credentials
+
+In this case, the attacker managed to obtain a plaintext credential of a special account and used it to move laterally on the domain. To mitigate and prevent this, administrators should preemptively audit for any and all plaintext passwords in documents, text files on company SMB shares and educate users about the risk of storing plaintext passwords on their computers and servers (MITRE). 
+
+- T1484.001: Group Policy Modification
+
+In this case, the attacker abused an user account with complete control over a Group Policy Object that affects the SRV02 and DC02 servers, leading to the attacker granting themselves Admin rights and eventually compromise the entire Domain. To mitigate this, administrators needs to ensure that the only user accounts that can control GPOs are Domain Admins. (MITRE)
+
+- T1558.001 and T1134: Cross-domain golden ticket
+
+As the Administrator on DC02, the attacker managed to obtain the trust credentials of the digitech.com Domain, allowing the attacker to forge a cross domain trust ticket with an SID-History attribute of Digitech's Domain Admin, effectively granting them control over the digitech.com domain. To mitigate this, Administrators on the digitech.com should enable SID Filtering for cross-trust authentication to automatically filter out SIDHistory (MITRE). 
+
+
+#### 5.2. Security policies recommandations
+
 
 
 ## VI. References
@@ -210,3 +237,17 @@ Trust technologies: Domain and forest trusts (no date) Domain and Forest Trusts 
 Prasad, S.K. (2024) Domain trusts- A comprehensive exploitation guide. Available at: https://redfoxsec.com/blog/domain-trusts-a-comprehensive-exploitation-guide/ (Accessed: 15 April 2025). 
 
 MITRE (no date) PSEXEC, PsExec, Software S0029 | MITRE ATT&CK®. Available at: https://attack.mitre.org/software/S0029/ (Accessed: 15 April 2025). 
+
+MITRE (no date) Account discovery, Account Discovery, Technique T1087 - Enterprise | MITRE ATT&CK®. Available at: https://attack.mitre.org/techniques/T1087/ (Accessed: 22 April 2025).
+
+Vinay , P. (no date) Network Access Restrict anonymous access to named pipes and shares - windows 10, Network access Restrict anonymous access to Named Pipes and Shares - Windows 10 | Microsoft Learn. Available at: https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/network-access-restrict-anonymous-access-to-named-pipes-and-shares (Accessed: 22 April 2025).
+
+MITRE (no date) Proxy, Proxy, Technique T1090 - Enterprise | MITRE ATT&CK®. Available at: https://attack.mitre.org/techniques/T1090/ (Accessed: 22 April 2025).
+
+MITRE (no date b) Unsecured credentials, Unsecured Credentials, Technique T1552 - Enterprise | MITRE ATT&CK®. Available at: https://attack.mitre.org/techniques/T1552/ (Accessed: 22 April 2025).
+
+MITRE (no date a) Domain or tenant policy modification: Group policy modification, Domain or Tenant Policy Modification: Group Policy Modification, Sub-technique T1484.001 - Enterprise | MITRE ATT&CK®. Available at: https://attack.mitre.org/techniques/T1484/001/ (Accessed: 22 April 2025). 
+
+MITRE (no date a) Access token manipulation: Sid-history injection, Access Token Manipulation: SID-History Injection, Sub-technique T1134.005 - Enterprise | MITRE ATT&CK®. Available at: https://attack.mitre.org/techniques/T1134/005/ (Accessed: 22 April 2025). 
+
+MITRE (no date d) Steal or Forge Kerberos tickets: Golden Ticket, Steal or Forge Kerberos Tickets: Golden Ticket, Sub-technique T1558.001 - Enterprise | MITRE ATT&CK®. Available at: https://attack.mitre.org/techniques/T1558/001/ (Accessed: 22 April 2025). 
