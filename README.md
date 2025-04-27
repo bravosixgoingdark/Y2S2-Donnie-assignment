@@ -452,6 +452,83 @@ As the Administrator on DC02, the attacker managed to obtain the trust credentia
 
 ## 5.2. Security policies recommandations
 
+### 5.2.1. Access Control Policy
+
+To reduce the potential of a rogue account like our user account, the admins should use the principle of least privilege, allowing authorized access for only users which are necessary to accomplish assigned tasks in accordance with organizational missions and business functions, and restrict the usage of those accounts. For example, permissions to edit GPOs that apply to critical servers like DC02 and SRV02 should be tightly restricted and routinely audited. If this can disrupt the flow of the company by taking away some privileges that are needed at the moment, for example needing to access certain high-privileged files, designate individuals authorized to post information onto a publicly accessible information system (NIST).
+
+### 5.2.2. Remote Access Policy
+
+Recall that this entire attack happens because the guest user could use ssh without extra privileges, from now on always ensure that the information system monitors and controls remote access methods. Any method of remote access must use a centrally managed authentication system for administration and user access. Turn off services when unnecessary, like the example above. If services like ssh have to be allowed, then when a remote access device will have access to other networked devices on the internal network, the remote device must be authenticated such that configuration of the device is compliant with applicable policies (NIST).
+
+### 5.2.3. Authentication Policy
+
+This policy might be overkill, but admins could consider implementing multifactor authentication for network access to privileged accounts. For Windows Users, Duo MFA login from Cisco can be installed to make sure no bad actors can get in with just passwords. Speaking of passwords, enforce everyone to set up complex passwords, with the usual unique characters, numbers, capitalized letters, and so forth. Also remember not to let them put their passwords in the description (NIST).
+
+### 5.2.4. Endpoint Security Policy
+
+Going along with all the above, there should be controls that help maintain the integrity of systems and information. Prestigious IDSs, IPSs, and SIEMs could be configured inside the network, with little to no drawbacks (NIST).
+
+### 5.2.5. Incident response Policy 
+
+In case of an ongoing attack inside your system, it is in your best interest to prepare a functional, up to date incident response plan, with detailed roadmaps, teams dedicated for the task, defined resources and management support needed to effectively maintain and mature an incident response capability, and was reviewed and approved by experts in this field.
+
+Here are some of the actions that could be used in that plan: personnel trained in incident responses — through regular simulations and automated training tools — should act swiftly, reporting the incident within the defined timeframe and escalating it to the appropriate authorities. Automated mechanisms should be employed to track, collect, and analyze incident data in real time. Coordination with Business Continuity, Disaster Recovery, and Crisis Communication Plans is crucial to minimizing damage from the threat. Throughout the response, dedicated incident response support teams must advise users and assist in handling and documenting the incident, ensuring that lessons learned contribute to continuous improvement of the organization’s resilience. Make sure that all actions have to align with the organization's plan (NIST).
+
+### 5.2.6. Security Awareness Training Policy
+
+Finally, to stop preventable problems like putting the password inside your description, your employees must also be up to date on security as well. If there are signs of ignorance, that employee must go through mandatory security training, covering secure coding, AD hygiene, file validation, phishing prevention, and so on. Higher Ups could force developers to heavily follow through a SDLC (Software Development Life Cycle) policy, which is a set of guidelines that integrates security best practices into every phase of the software development process — from planning to deployment and maintenance (Souppaya et al., 2022). 
+
+The key components of a secure SDLC policy should look like:
+
+1. Requirements Phase NIST (2022) Assessing security and privacy controls in information systems and organizations, CSRC. Available at: https://csrc.nist.gov/pubs/sp/800/53/a/r5/final (Accessed: 28 April 2025). 
+
+* Identify security and compliance requirements early
+
+* Include threat modeling and risk assessments
+
+* Reference standards like OWASP ASVS, NIST, PCI-DSS, or ISO 27001
+
+2. Design Phase
+
+* Apply secure architecture principles (e.g., least privilege, defense in depth)
+
+* Review data flow diagrams and apply threat modeling (e.g., STRIDE)
+
+* Plan for secure authentication, authorization, and data encryption
+
+3. Development Phase
+
+* Enforce secure coding standards (e.g., OWASP Secure Coding Practices)
+
+* Use code linters and static analysis tools (e.g., SonarQube, Semgrep)
+
+* Avoid hardcoding secrets — use environment variables or secret managers
+
+4. Testing phase 
+
+* Conduct static and dynamic application security testing (SAST/DAST)
+
+* Include vulnerability scanning, dependency checking (e.g., Snyk, OWASP Dependency-Check)
+
+* Run manual code reviews or peer reviews focused on security
+
+5. Deployment Phase
+
+* Use infrastructure-as-code (IaC) with security controls baked in
+
+* Scan containers and CI/CD pipelines for misconfigurations
+
+* Deploy with least-privilege access and role-based controls
+
+6. Maintenance Phase
+
+* Continuously monitor for vulnerabilities (e.g., with SIEM)
+
+* Patch known vulnerabilities quickly
+
+* Conduct regular security audits and penetration tests
+
+
 
 
 # VI. References
@@ -525,3 +602,10 @@ Symantec. (2017). WannaCry Ransomware Attack: Analysis and Mitigation Strategies
 
 Whitman, M. E., & Mattord, H. J. (2022). Principles of Information Security (7th ed.). Cengage Learning.
 
+NIST (2022) Assessing security and privacy controls in information systems and organizations, CSRC. Available at: https://csrc.nist.gov/pubs/sp/800/53/a/r5/final (Accessed: 28 April 2025).
+
+Souppaya, M., Scarfone, K. and NIST (2016) Guide to enterprise telework, remote access, and bring your own device (BYOD) security, CSRC. Available at: https://csrc.nist.gov/pubs/sp/800/46/r2/final (Accessed: 28 April 2025). 
+
+NIST (2022) Assessing security and privacy controls in information systems and organizations, CSRC. Available at: https://csrc.nist.gov/pubs/sp/800/53/a/r5/final (Accessed: 28 April 2025). 
+
+Souppaya, M., Scarfone, K. and Dodson, D. (2022) Secure software development framework (SSDF) version 1.1: Recommendations for mitigating the risk of software vulnerabilities, CSRC. Available at: https://csrc.nist.gov/pubs/sp/800/218/final (Accessed: 28 April 2025).
