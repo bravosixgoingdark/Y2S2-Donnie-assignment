@@ -533,79 +533,79 @@ The key components of a secure SDLC policy should look like:
 
 # VI. References
 
-Shebli, H.M. and Beheshti, B.D. (2018) ‘A study on penetration testing process and Tools’, 2018 IEEE Long Island Systems, Applications and Technology Conference (LISAT), pp. 1–7. doi:10.1109/lisat.2018.8378035. 
+- Andress, J. (2019). *The basics of information security: Understanding the fundamentals of InfoSec* (3rd ed.). Syngress.
 
-Review of the attacks associated with lapsus$ and related threat groups executive summary: CISA (2023) Cybersecurity and Infrastructure Security Agency CISA. Available at: https://www.cisa.gov/resources-tools/resources/review-attacks-associated-lapsus-and-related-threat-groups-executive-summary. 
+- Cole, E., Krutz, R. L., & Conley, J. W. (2018). *Network Security Bible* (2nd ed.). Wiley.
 
-Jonathan, J. (2021) RPC for Detection Engineers. Available at: https://specterops.io/wp-content/uploads/sites/3/2022/06/RPC_for_Detection_Engineers.pdf (Accessed: 12 April 2025). 
+- Europol. (2018). *Internet Organized Crime Threat Assessment (IOCTA) 2018*. https://www.europol.europa.eu/
 
-Group policy API (no date) Microsoft Learn. Available at: https://learn.microsoft.com/en-us/previous-versions/windows/desktop/policy/group-policy-start-page (Accessed: 13 April 2025). 
+- Garcia, M. L. (2008). *The Design and Evaluation of Physical Protection Systems* (2nd ed.). Butterworth-Heinemann.
 
-Trust technologies: Domain and forest trusts (no date) Domain and Forest Trusts | Microsoft Learn. Available at: https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc759554(v=ws.10)?redirectedfrom=MSDN (Accessed: 14 April 2025). 
+- Group policy API (no date). *Microsoft Learn*. https://learn.microsoft.com/en-us/previous-versions/windows/desktop/policy/group-policy-start-page (Accessed: 13 April 2025).
 
-Prasad, S.K. (2024) Domain trusts- A comprehensive exploitation guide. Available at: https://redfoxsec.com/blog/domain-trusts-a-comprehensive-exploitation-guide/ (Accessed: 15 April 2025). 
+- ISO/IEC (2022). *27001:2022 Information security, cybersecurity and privacy protection*. Geneva: International Organization for Standardization. https://www.iso.org/isoiec-27001-information-security.html (Accessed: 14 April 2025).
 
-MITRE (no date) PSEXEC, PsExec, Software S0029 | MITRE ATT&CK®. Available at: https://attack.mitre.org/software/S0029/ (Accessed: 15 April 2025). 
+- ISO/IEC 27001:2022. (2022). *Information security, cybersecurity and privacy protection — Information security management systems — Requirements*.
 
-MITRE (no date) Account discovery, Account Discovery, Technique T1087 - Enterprise | MITRE ATT&CK®. Available at: https://attack.mitre.org/techniques/T1087/ (Accessed: 22 April 2025).
+- Jonathan, J. (2021). *RPC for Detection Engineers*. https://specterops.io/wp-content/uploads/sites/3/2022/06/RPC_for_Detection_Engineers.pdf (Accessed: 12 April 2025).
 
-Vinay , P. (no date) Network Access Restrict anonymous access to named pipes and shares - windows 10, Network access Restrict anonymous access to Named Pipes and Shares - Windows 10 | Microsoft Learn. Available at: https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/network-access-restrict-anonymous-access-to-named-pipes-and-shares (Accessed: 22 April 2025).
+- Microsoft. (2017). *Microsoft Security Bulletin MS17-010 – Critical*. https://docs.microsoft.com/en-us/security-updates/securitybulletins/2017/ms17-010
 
-MITRE (no date) Proxy, Proxy, Technique T1090 - Enterprise | MITRE ATT&CK®. Available at: https://attack.mitre.org/techniques/T1090/ (Accessed: 22 April 2025).
+- Mitchell, R., & Chen, I. R. (2021). *Adaptive Cyber Defense for the Internet of Things*. Springer.
 
-MITRE (no date b) Unsecured credentials, Unsecured Credentials, Technique T1552 - Enterprise | MITRE ATT&CK®. Available at: https://attack.mitre.org/techniques/T1552/ (Accessed: 22 April 2025).
+- Mitnick, K. D., & Simon, W. L. (2011). *The Art of Deception: Controlling the Human Element of Security*. Wiley.
 
-MITRE (no date a) Domain or tenant policy modification: Group policy modification, Domain or Tenant Policy Modification: Group Policy Modification, Sub-technique T1484.001 - Enterprise | MITRE ATT&CK®. Available at: https://attack.mitre.org/techniques/T1484/001/ (Accessed: 22 April 2025). 
+- MITRE (no date). *Account discovery, Account Discovery, Technique T1087 - Enterprise | MITRE ATT&CK®*. https://attack.mitre.org/techniques/T1087/ (Accessed: 22 April 2025).
 
-MITRE (no date a) Access token manipulation: Sid-history injection, Access Token Manipulation: SID-History Injection, Sub-technique T1134.005 - Enterprise | MITRE ATT&CK®. Available at: https://attack.mitre.org/techniques/T1134/005/ (Accessed: 22 April 2025). 
+- MITRE (no date). *Proxy, Proxy, Technique T1090 - Enterprise | MITRE ATT&CK®*. https://attack.mitre.org/techniques/T1090/ (Accessed: 22 April 2025).
 
-MITRE (no date d) Steal or Forge Kerberos tickets: Golden Ticket, Steal or Forge Kerberos Tickets: Golden Ticket, Sub-technique T1558.001 - Enterprise | MITRE ATT&CK®. Available at: https://attack.mitre.org/techniques/T1558/001/ (Accessed: 22 April 2025).
+- MITRE (no date). *PSEXEC, PsExec, Software S0029 | MITRE ATT&CK®*. https://attack.mitre.org/software/S0029/ (Accessed: 15 April 2025).
 
-Andress, J. (2019) The basics of information security: Understanding the fundamentals of InfoSec. 3rd edn. Syngress.
-ISO/IEC (2022) 27001:2022 Information security, cybersecurity and privacy protection. Geneva: International Organization for Standardization. Available at: https://www.iso.org/isoiec-27001-information-security.html (Accessed: 14 April 2025).
+- MITRE (no date a). *Access token manipulation: Sid-history injection, Sub-technique T1134.005 - Enterprise | MITRE ATT&CK®*. https://attack.mitre.org/techniques/T1134/005/ (Accessed: 22 April 2025).
 
-National Institute of Standards and Technology (NIST) (2018) Framework for improving critical infrastructure cybersecurity, Version 1.1. Available at: https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.04162018.pdf (Accessed: 14 April 2025).
+- MITRE (no date a). *Domain or tenant policy modification: Group policy modification, Sub-technique T1484.001 - Enterprise | MITRE ATT&CK®*. https://attack.mitre.org/techniques/T1484/001/ (Accessed: 22 April 2025).
 
-National Institute of Standards and Technology (NIST) (2020) Security and privacy controls for information systems and organizations (NIST Special Publication 800-53 Rev. 5). Available at: https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final (Accessed: 14 April 2025).
+- MITRE (no date b). *Unsecured credentials, Technique T1552 - Enterprise | MITRE ATT&CK®*. https://attack.mitre.org/techniques/T1552/ (Accessed: 22 April 2025).
 
-SANS Institute (2021) Critical Security Controls Version 8. Available at: https://www.cisecurity.org/controls/cis-controls-list (Accessed: 14 April 2025).
+- MITRE (no date d). *Steal or Forge Kerberos tickets: Golden Ticket, Sub-technique T1558.001 - Enterprise | MITRE ATT&CK®*. https://attack.mitre.org/techniques/T1558/001/ (Accessed: 22 April 2025).
 
-Stallings, W. (2020) Network security essentials: Applications and standards. 6th edn. Pearson.
+- National Institute of Standards and Technology (NIST). (2010). *Contingency Planning Guide for Federal Information Systems (SP 800-34 Rev. 1)*.
 
-Whitman, M.E. and Mattord, H.J. (2022) Principles of information security. 7th edn. Cengage Learning.
+- National Institute of Standards and Technology (NIST). (2012). *Computer Security Incident Handling Guide (SP 800-61 Rev. 2)*.
 
-Cole, E., Krutz, R. L., & Conley, J. W. (2018). Network Security Bible (2nd ed.). Wiley.
+- National Institute of Standards and Technology (NIST). (2017). *Digital Identity Guidelines (SP 800-63B)*.
 
-Europol. (2018). Internet Organized Crime Threat Assessment (IOCTA) 2018. https://www.europol.europa.eu/
+- National Institute of Standards and Technology (NIST) (2018). *Framework for improving critical infrastructure cybersecurity, Version 1.1*. https://nvlpubs.nist.gov/nistpubs/CSWP/NIST.CSWP.04162018.pdf (Accessed: 14 April 2025).
 
-Garcia, M. L. (2008). The Design and Evaluation of Physical Protection Systems (2nd ed.). Butterworth-Heinemann.
+- National Institute of Standards and Technology (NIST) (2020). *Security and privacy controls for information systems and organizations (SP 800-53 Rev. 5)*. https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final (Accessed: 14 April 2025).
 
-ISO/IEC 27001:2022. (2022). Information security, cybersecurity and privacy protection — Information security management systems — Requirements.
+- NIST (2022). *Assessing security and privacy controls in information systems and organizations, CSRC*. https://csrc.nist.gov/pubs/sp/800/53/a/r5/final (Accessed: 28 April 2025).
 
-Microsoft. (2017). Microsoft Security Bulletin MS17-010 – Critical. https://docs.microsoft.com/en-us/security-updates/securitybulletins/2017/ms17-010
+- Prasad, S.K. (2024). *Domain trusts – A comprehensive exploitation guide*. https://redfoxsec.com/blog/domain-trusts-a-comprehensive-exploitation-guide/ (Accessed: 15 April 2025).
 
-Mitchell, R., & Chen, I. R. (2021). Adaptive Cyber Defense for the Internet of Things. Springer.
+- Review of the attacks associated with lapsus$ and related threat groups executive summary: CISA (2023). *Cybersecurity and Infrastructure Security Agency CISA*. https://www.cisa.gov/resources-tools/resources/review-attacks-associated-lapsus-and-related-threat-groups-executive-summary
 
-Mitnick, K. D., & Simon, W. L. (2011). The Art of Deception: Controlling the Human Element of Security. Wiley.
+- SANS Institute (2021). *Critical Security Controls Version 8*. https://www.cisecurity.org/controls/cis-controls-list (Accessed: 14 April 2025).
 
-National Institute of Standards and Technology (NIST). (2010). Contingency Planning Guide for Federal Information Systems (SP 800-34 Rev. 1).
+- Scarfone, K., & Mell, P. (2007). *Guide to Intrusion Detection and Prevention Systems (IDPS) (SP 800-94)*.
 
-National Institute of Standards and Technology (NIST). (2012). Computer Security Incident Handling Guide (SP 800-61 Rev. 2).
+- Shebli, H.M. and Beheshti, B.D. (2018). *A study on penetration testing process and Tools*. 2018 IEEE Long Island Systems, Applications and Technology Conference (LISAT), pp. 1–7. https://doi.org/10.1109/lisat.2018.8378035.
 
-National Institute of Standards and Technology (NIST). (2017). Digital Identity Guidelines (SP 800-63B)
+- Souppaya, M., Scarfone, K. and Dodson, D. (2022). *Secure software development framework (SSDF) version 1.1: Recommendations for mitigating the risk of software vulnerabilities, CSRC*. https://csrc.nist.gov/pubs/sp/800/218/final (Accessed: 28 April 2025).
 
-Scarfone, K., & Mell, P. (2007). Guide to Intrusion Detection and Prevention Systems (IDPS) (SP 800-94).
+- Souppaya, M., Scarfone, K. and NIST (2016). *Guide to enterprise telework, remote access, and bring your own device (BYOD) security, CSRC*. https://csrc.nist.gov/pubs/sp/800/46/r2/final (Accessed: 28 April 2025).
 
-Stallings, W. (2021). Network Security Essentials: Applications and Standards (6th ed.). Pearson.
+- Stallings, W. (2020). *Network security essentials: Applications and standards* (6th ed.). Pearson.
 
-Symantec. (2017). WannaCry Ransomware Attack: Analysis and Mitigation Strategies. https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/wannacry-ransomware-attack
+- Stallings, W. (2021). *Network Security Essentials: Applications and Standards* (6th ed.). Pearson.
 
-Whitman, M. E., & Mattord, H. J. (2022). Principles of Information Security (7th ed.). Cengage Learning.
+- Symantec. (2017). *WannaCry Ransomware Attack: Analysis and Mitigation Strategies*. https://symantec-enterprise-blogs.security.com/blogs/threat-intelligence/wannacry-ransomware-attack
 
-NIST (2022) Assessing security and privacy controls in information systems and organizations, CSRC. Available at: https://csrc.nist.gov/pubs/sp/800/53/a/r5/final (Accessed: 28 April 2025).
+- Trust technologies: Domain and forest trusts (no date). *Microsoft Learn*. https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-server-2003/cc759554(v=ws.10)?redirectedfrom=MSDN (Accessed: 14 April 2025).
 
-Souppaya, M., Scarfone, K. and NIST (2016) Guide to enterprise telework, remote access, and bring your own device (BYOD) security, CSRC. Available at: https://csrc.nist.gov/pubs/sp/800/46/r2/final (Accessed: 28 April 2025). 
+- Vinay, P. (no date). *Network Access Restrict anonymous access to named pipes and shares - Windows 10 | Microsoft Learn*. https://learn.microsoft.com/en-us/previous-versions/windows/it-pro/windows-10/security/threat-protection/security-policy-settings/network-access-restrict-anonymous-access-to-named-pipes-and-shares (Accessed: 22 April 2025).
 
-NIST (2022) Assessing security and privacy controls in information systems and organizations, CSRC. Available at: https://csrc.nist.gov/pubs/sp/800/53/a/r5/final (Accessed: 28 April 2025). 
+- Whitman, M.E. and Mattord, H.J. (2022). *Principles of information security* (7th ed.). Cengage Learning.
 
-Souppaya, M., Scarfone, K. and Dodson, D. (2022) Secure software development framework (SSDF) version 1.1: Recommendations for mitigating the risk of software vulnerabilities, CSRC. Available at: https://csrc.nist.gov/pubs/sp/800/218/final (Accessed: 28 April 2025).
+- Whitman, M. E., & Mattord, H. J. (2022). *Principles of Information Security* (7th ed.). Cengage Learning.
+
